@@ -1,0 +1,10 @@
+todo.txt
+
+- mettre les différentes méthodes en option :
+population.set_selection(TOURNAMENT | ROULETTE | RANDOM)
+population.set_mutation(SIMPLE | DOUBLE)
+etc.
+=> stocker static?
+
+- pouvoir passer fonction fitness en pointeur de fonction
+double (*fonction)(Individu)
