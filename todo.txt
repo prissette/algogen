@@ -4,7 +4,7 @@ todo.txt
 population.set_selection(TOURNAMENT | ROULETTE | RANDOM)
 population.set_mutation(SIMPLE | DOUBLE)
 etc.
-=> stocker static?
+=> stocker static ?
 
 - pouvoir passer fonction fitness en pointeur de fonction
 double (*fonction)(Individu)
