@@ -11,7 +11,7 @@ int main(void)
 	cout << I << endl;
 	
 
-	Population<10,5> P;
+	Population<10,5> P; // 10 individus dont le genome est de taille 5
 
     cout << P << endl;
     }

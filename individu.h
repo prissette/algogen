@@ -1,3 +1,12 @@
+/** \file individu.h
+ * \author Cyril Prissette (Laboratoire LSIS - UMR 7296)
+ * \version   0.1
+ * \date      2012
+ * \warning   Travail de recherche, ne pas utiliser les yeux fermés
+ * Header pour les classes Individu et Population
+ * Les classes Individu et Population sont des classes templates, seul ce fichier d'entête est nécessaire.
+ */
+
 #ifndef __INDIVIDU__
 #define __INDIVIDU__
 
@@ -14,14 +23,14 @@ using namespace std;
 /** \class Individu
  *  \brief decrit un unique individu, avec son génome
  * 
- *  \parameter TAILLE : longueur du génôme
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 class Individu
     {
     public :
-        bitset<TAILLE> _gene;
-		float _fitness;
+        bitset<TAILLE> _gene; /// génôme binaire de l'individu individu
+		float _fitness; // fitness de l'individu
 
 		Individu();
 		Individu(bool b);
@@ -65,6 +74,7 @@ _initrand=true;
 
 /** \fn Individu<TAILLE>::Individu()
  *  \brief constructeur par defaut d'un Individu aleatoire
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 Individu<TAILLE>::Individu()
@@ -79,6 +89,7 @@ Individu<TAILLE>::Individu()
 
 /** \fn Individu<TAILLE>::Individu(bool)
  *  \brief constructeur d'un Individu (0..0) ou (1..1)
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 Individu<TAILLE>::Individu(bool b)
@@ -93,6 +104,7 @@ Individu<TAILLE>::Individu(bool b)
 
 /** \fn Individu<TAILLE>::Individu(const Individu<TAILLE>&)
  *  \brief constructeur par recopie 
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 Individu<TAILLE>::Individu(const Individu<TAILLE>& ind)
@@ -103,6 +115,7 @@ Individu<TAILLE>::Individu(const Individu<TAILLE>& ind)
 
 /** \fn Individu<TAILLE>&::operator=(const Individu<TAILLE>&)
  *  \brief constructeur par recopie 
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 Individu<TAILLE>& Individu<TAILLE>::operator=(const Individu<TAILLE>& ind)
@@ -118,6 +131,7 @@ Individu<TAILLE>& Individu<TAILLE>::operator=(const Individu<TAILLE>& ind)
 
 /** \fn float ~Individu()
  *  \brief destructeur
+ *  \tparam TAILLE : longueur du génôme
  */
 template <int TAILLE>
 Individu<TAILLE>::~Individu()
@@ -128,6 +142,7 @@ Individu<TAILLE>::~Individu()
 /** \fn float Individu<TAILLE>::fitness(void)
  *  \brief recalcule le fitness
  *  \return la valeur du fitness
+ *  \tparam TAILLE : longueur du génôme
  * 
  *  Fitness pour le One Max Problem, pour tester la bibliothèque
  */
@@ -138,7 +153,12 @@ double Individu<TAILLE>::fitness(void)
 	return _fitness;
 	}
 
-
+/** \fn ostream& operator<<(ostream& c, const Individu<TAILLE>& ind)
+ *  \brief surcharge de l'operateur d'affichage
+ *  \tparam TAILLE : longueur du génôme
+ * 
+ *  Affiche le génôme et le fitness de l'individu
+ */
 template <int TAILLE>	
 ostream& operator<<(ostream& c, const Individu<TAILLE>& ind)
 	{
@@ -147,16 +167,16 @@ ostream& operator<<(ostream& c, const Individu<TAILLE>& ind)
 	}
 
 //**********************************************************************
-//**********************************************************************
-//**********************************************************************
-//**********************************************************************
+//**                                                                  **
+//**                           POPULATION                             **
+//**                                                                  **
 //**********************************************************************
 
 /** \class Population
  *  \brief ensemble d'Individu
  * 
- *  \parameter TAILLE : longueur du génôme des individus
- *  \parameter NB_INDIVIDU : nombre d'individus de la population
+ *  \tparam TAILLE : longueur du génôme des individus
+ *  \tparam NB_INDIVIDU : nombre d'individus de la population
  */
 template <int NB_INDIVIDU, int TAILLE> // taille population, taille des genes 
 class Population
@@ -176,6 +196,11 @@ class Population
 
 	};
 
+/** \fn Population<NB_INDIVIDU, TAILLE>::Population()
+ *  \brief constructeur par défaut
+ * 
+ *  Génère une population aléatoire.
+ */
 template <int NB_INDIVIDU, int TAILLE>
 Population<NB_INDIVIDU, TAILLE>::Population()
 	{
@@ -184,7 +209,12 @@ Population<NB_INDIVIDU, TAILLE>::Population()
 	for (int i=0; i<_taille_population; i++) _individus.push_back(Individu<TAILLE>());
 	}
 
-
+/** \fn Population<NB_INDIVIDU, TAILLE>::Population()
+ *  \brief constructeur par recopie
+ *  \param p : population à recopier
+ * 
+ *  Recopie la population p.
+ */
 template <int NB_INDIVIDU, int TAILLE>
 Population<NB_INDIVIDU, TAILLE>::Population(const Population<NB_INDIVIDU, TAILLE> &p)
 	{
@@ -192,7 +222,13 @@ Population<NB_INDIVIDU, TAILLE>::Population(const Population<NB_INDIVIDU, TAILLE
 	
 	for (int i=0; i<_taille_population; i++) _individus.push_back( p._individus[i] );
 	}
-	
+
+/** \fn Population<NB_INDIVIDU, TAILLE>& Population<NB_INDIVIDU, TAILLE>::operator=(const Population<NB_INDIVIDU, TAILLE>&p)
+ *  \brief surcharge de l'opérateur d'affectation
+ *  \param p : population à recopier
+ * 
+ *  Recopie la population p.
+ */	
 template <int NB_INDIVIDU, int TAILLE>
 Population<NB_INDIVIDU, TAILLE>& Population<NB_INDIVIDU, TAILLE>::operator=(const Population<NB_INDIVIDU, TAILLE>&p)
 	{
@@ -204,14 +240,25 @@ Population<NB_INDIVIDU, TAILLE>& Population<NB_INDIVIDU, TAILLE>::operator=(cons
 	return *this;
 	
 	}
-	
+
+/** \fn Population<NB_INDIVIDU, TAILLE>::~Population()
+ *  \brief destructeur
+ * 
+ *  Detruit la population p.
+ */	
 template <int NB_INDIVIDU, int TAILLE>
 Population<NB_INDIVIDU, TAILLE>::~Population()
 	{
 	
 	}
 	
-	
+/** \fn ostream& operator<<(ostream& c, const Population<NB_INDIVIDU, TAILLE>& p)
+ *  \brief surcharge de l'opérateur d'affichage
+ *  \param c : le flux de sortie
+ *  \param p : la population à afficher
+ * 
+ *  Affiche la population p, à l'aide de l'opérateur d'affichage d'un individu.
+ */	
 template <int NB_INDIVIDU, int TAILLE>	
 ostream& operator<<(ostream& c, const Population<NB_INDIVIDU, TAILLE>& p)
 	{
