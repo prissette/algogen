@@ -3,10 +3,19 @@
 
 #include <iostream>
 #include <bitset>
+#include <vector>
 using namespace std;
 
 #include <stdlib.h>
 #include <time.h>
+
+
+
+/** \class Individu
+ *  \brief decrit un unique individu, avec son génome
+ * 
+ *  \parameter TAILLE : longueur du génôme
+ */
 template <int TAILLE>
 class Individu
     {
@@ -20,8 +29,10 @@ class Individu
 		Individu<TAILLE>& operator=(const Individu<TAILLE>&);
 		virtual ~Individu();
 			
+		virtual double fitness(void); // a changer quand on herite pour un autre probleme
 
-		float fitness(void);
+		template <int T>	
+		friend ostream& operator<<(ostream&, const Individu<T>&);
 
 	// pour initialiser le générateur pseudo-aleatoire une seule fois
 	private :
@@ -29,6 +40,8 @@ class Individu
 		void initrand(int);
 		
     };
+
+
 
 
 // pour initialiser le générateur pseudo-aleatoire une seule fois
@@ -78,17 +91,17 @@ Individu<TAILLE>::Individu(bool b)
 	_fitness=b?1:0;
 	}
 
-/** \fn Individu<TAILLE>::Individu(const Individu&)
+/** \fn Individu<TAILLE>::Individu(const Individu<TAILLE>&)
  *  \brief constructeur par recopie 
  */
 template <int TAILLE>
 Individu<TAILLE>::Individu(const Individu<TAILLE>& ind)
 	{
 	_gene = ind._gene;
-	_fitness= ind.fitness;
+	_fitness= ind._fitness;
 	}
 
-/** \fn Individu<TAILLE>::Individu(const Individu&)
+/** \fn Individu<TAILLE>&::operator=(const Individu<TAILLE>&)
  *  \brief constructeur par recopie 
  */
 template <int TAILLE>
@@ -98,7 +111,7 @@ Individu<TAILLE>& Individu<TAILLE>::operator=(const Individu<TAILLE>& ind)
 		return *this;
 
 	_gene = ind._gene;
-	_fitness= ind.fitness;
+	_fitness= ind._fitness;
 	return *this;
 	}
 
@@ -112,16 +125,99 @@ Individu<TAILLE>::~Individu()
 	}
 
 
-
 /** \fn float Individu<TAILLE>::fitness(void)
  *  \brief recalcule le fitness
  *  \return la valeur du fitness
+ * 
+ *  Fitness pour le One Max Problem, pour tester la bibliothèque
  */
 template <int TAILLE>
-float Individu<TAILLE>::fitness(void)
+double Individu<TAILLE>::fitness(void)
 	{
 	_fitness = ( (float) _gene.count()) / TAILLE; // one-max problem
 	return _fitness;
+	}
+
+
+template <int TAILLE>	
+ostream& operator<<(ostream& c, const Individu<TAILLE>& ind)
+	{
+	c << ind._gene << " (" << ind._fitness << ")";
+	return c;
+	}
+
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+//**********************************************************************
+
+/** \class Population
+ *  \brief ensemble d'Individu
+ * 
+ *  \parameter TAILLE : longueur du génôme des individus
+ *  \parameter NB_INDIVIDU : nombre d'individus de la population
+ */
+template <int NB_INDIVIDU, int TAILLE> // taille population, taille des genes 
+class Population
+	{
+	public :
+		vector< Individu<TAILLE> > _individus;
+		int _taille_population;
+		
+		Population();
+		Population(const Population<NB_INDIVIDU, TAILLE>&);
+		Population<NB_INDIVIDU, TAILLE>& operator=(const Population<NB_INDIVIDU, TAILLE>&);
+		virtual ~Population();
+		
+		
+		template <int N, int T>	
+		friend ostream& operator<<(ostream&, const Population<N,T>&);
+
+	};
+
+template <int NB_INDIVIDU, int TAILLE>
+Population<NB_INDIVIDU, TAILLE>::Population()
+	{
+	_taille_population=NB_INDIVIDU;	
+
+	for (int i=0; i<_taille_population; i++) _individus.push_back(Individu<TAILLE>());
+	}
+
+
+template <int NB_INDIVIDU, int TAILLE>
+Population<NB_INDIVIDU, TAILLE>::Population(const Population<NB_INDIVIDU, TAILLE> &p)
+	{
+	_taille_population=p._taille_population;
+	
+	for (int i=0; i<_taille_population; i++) _individus.push_back( p._individus[i] );
+	}
+	
+template <int NB_INDIVIDU, int TAILLE>
+Population<NB_INDIVIDU, TAILLE>& Population<NB_INDIVIDU, TAILLE>::operator=(const Population<NB_INDIVIDU, TAILLE>&p)
+	{
+	if (&p == this)
+		return *this;
+	
+	for (int i=0; i<_taille_population; i++) _individus.push_back( p._individus[i] );
+
+	return *this;
+	
+	}
+	
+template <int NB_INDIVIDU, int TAILLE>
+Population<NB_INDIVIDU, TAILLE>::~Population()
+	{
+	
+	}
+	
+	
+template <int NB_INDIVIDU, int TAILLE>	
+ostream& operator<<(ostream& c, const Population<NB_INDIVIDU, TAILLE>& p)
+	{
+	for (int i=0; i<p._taille_population; i++) c << p._individus[i] << endl;
+	
+	return c;
 	}
 
 #endif

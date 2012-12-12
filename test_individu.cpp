@@ -5,12 +5,13 @@ int main(void)
     {
     Individu<10> I,J;
 
-	cout << I._gene << endl;
-	cout << I.fitness() << endl;
+	cout << I << endl;
+	cout << J << endl;
+	I=J;
+	cout << I << endl;
+	
 
-	cout << J._gene << endl;
-	cout << J.fitness() << endl;
+	Population<10,5> P;
 
-
-    cout << "fin" << endl;
+    cout << P << endl;
     }
