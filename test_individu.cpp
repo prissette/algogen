@@ -1,18 +1,28 @@
 #include <iostream>
 #include "individu.h"
 
+double fitness_blink(const Individu&p)
+{
+	int f=0;
+	for (int i=0; i<p.taille()-1; i++)
+		if (p[i]!=p[i+1])
+			f++;
+	return ((float) f) / (p.taille()-1);
+}
+
+
+
 int main(void)
     {
-    Individu<10> I,J;
+    Individu I,J;
+	cout << I << endl;
+	I.set_taille(21);
 
 	cout << I << endl;
-	cout << J << endl;
-	I=J;
+	I.set_fitness( fitness_blink );
 	cout << I << endl;
 	
-
-	Population<10,5> P; // 10 individus dont le genome est de taille 5
-
-    cout << P << endl;
+	cout << fitness_blink(I) << endl;
+	
     }
 
