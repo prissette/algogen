@@ -4,8 +4,6 @@ using namespace std;
 
 // pour initialiser le générateur pseudo-aleatoire une seule fois
 bool Individu::_initrand=false;
-
-
 void Individu::initrand(int s=-1)
 {
 if (_initrand)
@@ -21,23 +19,23 @@ _initrand=true;
 
 
 /** \fn Individu::Individu()
- *  \brief constructeur par defaut d'un Individu aleatoire
- *  \tparam TAILLE : longueur du génôme
+ *  \brief Constructeur par defaut
+ * 
+ * Construction d'un individu de taille 0, sans fonction d'évaluation (NULL).
  */
 
 Individu::Individu()
 	{
 	initrand();	
 
-	for (int i=0; i<taille(); i++)
-		_gene[i]=rand()%2;
-
 	_fitness=NULL;
 	}
 
 /** \fn Individu::Individu(unsigned int t)
- *  \brief constructeur d'un Individu avec un génôme de taille non nulle
- *  \param t : longueur du génôme
+ *  \param t	Taille du génôme
+ *  \brief Constructeur d'un Individu avec un génôme de taille t
+ *  
+ *  Construction d'un individu de taille t avec un génôme binaire aléatoire et sans fonction d'évaluation (NULL).
  */
 
 Individu::Individu(unsigned int t)
@@ -51,9 +49,9 @@ Individu::Individu(unsigned int t)
 	_fitness=NULL;
 	}
 
-/** \fn Individu::Individu(const Individu&)
- *  \brief constructeur par recopie 
- *  \tparam TAILLE : longueur du génôme
+/** \fn Individu::Individu(const Individu& ind)
+ *  \param ind Individu à recopier
+ *  \brief Constructeur par recopie 
  */
 
 Individu::Individu(const Individu& ind)
@@ -62,9 +60,9 @@ Individu::Individu(const Individu& ind)
 	_fitness= ind._fitness;
 	}
 
-/** \fn Individu&::operator=(const Individu&)
- *  \brief constructeur par recopie 
- *  \tparam TAILLE : longueur du génôme
+/** \fn Individu&::operator=(const Individu& ind)
+ *  \param ind Individu à affecter
+ *  \brief Operateur d'affectation 
  */
 
 Individu& Individu::operator=(const Individu& ind)
@@ -79,8 +77,7 @@ Individu& Individu::operator=(const Individu& ind)
 
 
 /** \fn float ~Individu()
- *  \brief destructeur
- *  \tparam TAILLE : longueur du génôme
+ *  \brief Destructeur
  */
 
 Individu::~Individu()
@@ -89,8 +86,12 @@ Individu::~Individu()
 
 
 /** \fn void Individu::set_taille(unsigned int t)
- *  \brief redimensionne un Individu
- *  \param t : longueur du génôme
+ *  \brief Redimensionne le gênome de l'Individu
+ *  \param t Longueur du génôme
+ * 
+ * Redimensionne le gênome binaire de l'Individu. 
+ * Si la nouvelle taille est inférieur, le génôme est tronqué.
+ * Si la nouvelle taille est supérieur, les nouveaux bits sont remplis aléatoirement.
  */
 void Individu::set_taille(unsigned int t)
 	{
@@ -105,7 +106,7 @@ void Individu::set_taille(unsigned int t)
 
 
 /** \fn unsigned int Individu::taille(void)
- *  \brief taille du genome
+ *  \brief Renvoie la taille du génôme
  */
 unsigned int Individu::taille(void) const
 	{
@@ -116,27 +117,24 @@ unsigned int Individu::taille(void) const
 
 
 
-/** \fn void Individu::set_fitness( double (*f)(const Individu &p) )
- *  \brief change la fonction fitness d'un individu
+/** \fn void Individu::set_fitness( double (*f)(const Individu &) )
+ *  \brief Change la fonction fitness de l'Individu
  *  \param f : fonction fitness à utiliser
  * 
- *  Si la fonction fitness n'est pas définie (_fitness vaut NULL),
- *  calcule le fitness pour le One Max Problem.
- * 
  *  La fonction fitness doit renvoyer un double compris entre 0 et 1, respectivement 
- *  pour un individu totalement inadapté et pour un individu parfaitement adapté
+ *  pour un individu totalement inadapté et pour un individu parfaitement adapté.
  * 
- * Exemple : fonction qui récompense les individu 0101..0101 ou 1010..1010
+ * Exemple : fonction qui récompense les individus 0101..0101 ou 1010..1010
  * 
  * \code{.cpp}
  * 
- * double fitness_blink(const Individu &p)
+ * double fitness_blink(const Individu &ind)
  * {
  * 	int f=0;
- * 	for (int i=0; i<TAILLE-1; i++)
- * 		if (p._gene[i]!=p._gene[i+1])
+ * 	for (int i=0; i<ind.taille(); i++)
+ * 		if (ind[i]!=ind[i+1])
  * 			f++;
- * 	return ((float) f) / (TAILLE-1);
+ * 	return ((double) f) / (TAILLE-1);
  * }
  * \endcode
  */
@@ -147,29 +145,31 @@ void Individu::set_fitness( double (*f)(const Individu &p) )
 }
 
 /** \fn float Individu::fitness(void)
- *  \brief recalcule le fitness
- *  \return la valeur du fitness
+ *  \brief Calcule le fitness
+ *  \return La valeur du fitness
  *  \tparam TAILLE : longueur du génôme
  * 
- *  Fitness pour le One Max Problem, pour tester la bibliothèque
+ *  Fitness est calculé à l'aide de la fonction pointée par l'Individu.
+ *  Si la fonction pointée est NULL, la fonction fitness employée est celle du One Max Problem (récompense les individu ayant le plus grand poids de Hamming).
  */
 
 double Individu::fitness(void) const
 	{
-	if (_fitness == NULL)
+	if (_fitness == NULL) // calcul le fitness du One Max Problem
 		{
 		int p=0;
 		for (int i=0; i<taille(); i++)
 			if (_gene[i]) p++;
 		 
-		return  ((float) p) / taille(); // one-max problem
+		return  ((float) p) / taille(); 
 		}
 	else
 		return _fitness(*this);
 	}
 
 /** \fn bool& Individu::operator[](int pos)
- * \brief renvoie une reference vers le ieme bit du genome
+ * \param pos Le bit auquel on veut accéder
+ * \brief Renvoie une reference vers le ieme bit du genome
  */
 int& Individu::operator[](int pos)
 	{
@@ -177,6 +177,7 @@ int& Individu::operator[](int pos)
 	}
 
 /** \fn bool Individu::operator[](int pos) const
+ * \param pos Le bit auquel on veut accéder
  * \brief renvoie la valeur du ieme bit du genome
  */
 int Individu::operator[](int pos) const
@@ -186,10 +187,13 @@ int Individu::operator[](int pos) const
 
 
 
-/** \fn ostream& operator<<(ostream& c, const Individu& ind)
- *  \brief surcharge de l'operateur d'affichage
+/** \relates Individu
+ * \fn ostream& operator<<(ostream& c, const Individu& ind)
+ * \param c Le flux sur lequel afficher
+ * \param ind L'Individu à afficher
+ * \brief Surcharge de l'operateur d'affichage
  * 
- *  Affiche le génôme et le fitness de l'individu
+ *  Affiche le génôme et le fitness de l'Individu passé en paramêtre.
  */
 	
 ostream& operator<<(ostream& c, const Individu& ind)

@@ -21,15 +21,22 @@ using namespace std;
 
 
 /** \class Individu
- *  \brief decrit un unique individu, avec son génome
+ *  \brief Decrit un individu, avec son génome binaire.
  * 
+ * Individu correspondant à une solution possible.
+ * Son génome est représenté sous forme binaire.
+ * La fonction d'évaluation est passée par pointeur.
  */
 class Individu
     {
-    public :
-        vector<int> _gene; /// génôme binaire 
-		double (*_fitness)(const Individu &p); /// fonction fitness de l'individu
+	protected :
+		/// Génôme binaire 
+        vector<int> _gene; 
+        
+        /// Pointeur vers la fonction fitness
+		double (*_fitness)(const Individu &p); 
 
+    public :
 		Individu();
 		Individu(unsigned int);
 		Individu(const Individu&);

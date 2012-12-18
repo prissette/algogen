@@ -22,6 +22,12 @@ int main(void)
 	I.set_fitness( fitness_blink );
 	cout << I << endl;
 	
+	I.set_taille(11);
+	cout << I << endl;
+	
+	I.set_taille(21);
+	cout << I << endl;
+	
 	cout << fitness_blink(I) << endl;
 	
     }
