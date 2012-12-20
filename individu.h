@@ -3,15 +3,14 @@
  * \version   0.1
  * \date      2012
  * \warning   Travail de recherche, ne pas utiliser les yeux fermés
- * Header pour les classes Individu et Population
- * Les classes Individu et Population sont des classes templates, seul ce fichier d'entête est nécessaire.
+ * 
+ * Header pour la classe Individu
  */
 
 #ifndef __INDIVIDU__
 #define __INDIVIDU__
 
 #include <iostream>
-#include <bitset>
 #include <vector>
 using namespace std;
 
