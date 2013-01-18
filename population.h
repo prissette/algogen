@@ -6,8 +6,8 @@
  * Header pour la classe Population
  */
  
- #ifndef __INDIVIDU__
-#define __INDIVIDU__
+#ifndef __POPULATION__
+#define __POPULATION__
 
 #include <iostream>
 #include <vector>
