@@ -12,7 +12,9 @@ double (*fonction)(Individu)
 - heriter pour nouveau probleme, en changeant fuste la fonction fitness
 
 - générer tout ou partie de la population par mimetisme
-	=> comme pour EDA, on évalue la distribution sur chaque bit
-	=> on génère des individus aléatoires en fonction de l'estimation de distribution
+    => comme pour EDA, on évalue la distribution sur chaque bit
+    => on génère des individus aléatoires en fonction de l'estimation de distribution
 
 - permettre une fonction fitness par individu <=> symbiote
+
+mise à jour ?
