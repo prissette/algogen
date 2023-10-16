@@ -17,4 +17,4 @@ double (*fonction)(Individu)
 
 - permettre une fonction fitness par individu <=> symbiote
 
-mise à jour ?
+- test git
