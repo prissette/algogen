@@ -1,4 +1,4 @@
 algogen
 =======
 
-Genetic algorithm library (research project).
+Genetic algorithm library (research project)..
