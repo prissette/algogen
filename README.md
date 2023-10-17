@@ -1,4 +1,4 @@
 algogen
 =======
 
-Genetic algorithm library (research project). & Token
+Genetic algorithm library (research project). & Token & Git
